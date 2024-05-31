@@ -1,6 +1,7 @@
 import { useState } from "react"
 import CustomModal from "../../CustomModal"
 import { useForm } from "react-hook-form"
+import { NavLink } from "react-router-dom"
 
 function RecentlyViewedIcon(props:any) {
     return (
@@ -43,7 +44,7 @@ const WorkSpace = () => {
         // }
     };
     return (
-        <div className="pb-28">
+        <div className="pb-28 pt-10">
             <CustomModal isOpen={isOpen} onClose={() => setIsOpen(!isOpen)} title="Create project">
                 <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
                     <div className="flex items-center justify-between">
@@ -59,9 +60,9 @@ const WorkSpace = () => {
             <h1 className="text-3xl font-semibold mb-5">Your Workspace</h1>
             <h2 className="flex items-center text-lg font-medium"><RecentlyViewedIcon className="h-6 w-6 mr-1" aria-hidden="true"/>Recently Viewed</h2>
             <div className="flex items-center py-6">
-                <div className="flex justify-center items-center p-6 bg-slate-800 rounded-xl mx-2 transition-all ease-linear hover:bg-slate-900 cursor-pointer">
+                <NavLink to='project/gdff' className="flex justify-center items-center p-6 bg-slate-800 rounded-xl mx-2 transition-all ease-linear hover:bg-slate-900 cursor-pointer">
                     <span className="text-base font-medium">Main project1</span>
-                </div>
+                </NavLink>
                 <div className="flex justify-center items-center p-6 bg-slate-800 rounded-xl mx-2 transition-all ease-linear hover:bg-slate-900 cursor-pointer">
                     <span className="text-base font-medium">Main project2</span>
                 </div>

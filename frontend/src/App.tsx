@@ -7,6 +7,7 @@ import SignUp from './components/Auth/SignUp'
 import UserWorkSpace from './components/UserWorkSpace'
 import WorkSpace from './components/UserWorkSpace/WorkSpace'
 import Project from './components/UserWorkSpace/Project'
+import Calendar from './components/UserWorkSpace/Calendar'
 
 function App() {
 
@@ -19,6 +20,9 @@ function App() {
           <Route path='userworkspace/:id' element={<UserWorkSpace/>}>
             <Route index element={<WorkSpace/>}></Route>
             <Route path='project/:id' element={<Project/>}></Route>
+          </Route>
+          <Route path='user/:id'>
+            <Route path='calendar' element={<Calendar/>}></Route>
           </Route>
         </Route>
       </Routes>

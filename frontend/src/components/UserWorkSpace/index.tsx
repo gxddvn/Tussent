@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom"
 import { Outlet } from "react-router-dom"
 
 function HomeIcon(props:any) {
@@ -22,9 +23,9 @@ const UserWorkSpace = () => {
         <div className="flex min-h-screen">
             <div className="px-2 pt-2 pb-16 bg-[rgba(0,0,0,.3)] fixed h-full flex flex-col justify-between">
                 <div>
-                    <div className="p-3 bg-slate-800 shadow-md rounded-xl cursor-pointer transition-all ease-linear hover:bg-slate-900">
+                    <NavLink to='/userworkspace/ffff' className=" flex p-3 bg-slate-800 shadow-md rounded-xl cursor-pointer transition-all ease-linear hover:bg-slate-900">
                         <HomeIcon className="h-5 w-5 m-1" aria-hidden="true"/>
-                    </div>
+                    </NavLink>
                 </div>
                 <div className="h-full">
                     <div className="p-3 bg-slate-800 shadow-md rounded-xl cursor-pointer my-2 flex justify-center items-center transition-all ease-linear hover:bg-slate-900">
@@ -46,7 +47,7 @@ const UserWorkSpace = () => {
                     </div>
                 </div>
             </div>
-            <div className="w-full pt-10 pl-40 pr-20 h-screen overflow-y-scroll">
+            <div className="w-full pl-40 pr-20 h-screen overflow-y-scroll">
                 <Outlet/>
             </div>
         </div>
