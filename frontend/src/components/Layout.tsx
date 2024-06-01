@@ -7,7 +7,7 @@ const Layout = () => {
     return (
         <>
             <Header/> 
-            <div className='relative h-auto my-0 mx-auto'>
+            <div className='relative h-full my-0 mx-auto'>
                 <Outlet />
             </div>
             {/* <Footer /> */}

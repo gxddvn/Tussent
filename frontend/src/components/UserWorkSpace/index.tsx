@@ -20,7 +20,7 @@ function FolderProjectsIcon(props:any) {
 const UserWorkSpace = () => {
     
     return (
-        <div className="flex min-h-screen">
+        <div className="flex h-full">
             <div className="px-2 pt-2 pb-16 bg-[rgba(0,0,0,.3)] fixed h-full flex flex-col justify-between">
                 <div>
                     <NavLink to='/userworkspace/ffff' className=" flex p-3 bg-slate-800 shadow-md rounded-xl cursor-pointer transition-all ease-linear hover:bg-slate-900">
@@ -47,7 +47,7 @@ const UserWorkSpace = () => {
                     </div>
                 </div>
             </div>
-            <div className="w-full pl-40 pr-20 h-screen overflow-y-scroll">
+            <div className="w-full pl-40 pr-20 h-full overflow-y-scroll">
                 <Outlet/>
             </div>
         </div>

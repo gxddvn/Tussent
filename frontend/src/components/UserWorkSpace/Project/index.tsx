@@ -42,7 +42,7 @@ function DoingIcon(props:any) {
 
 const Project = () => {
     return (
-        <div className="h-full pb-16 pt-5">
+        <div className=" pt-5">
             <div className="flex items-center justify-between px-4 py-3 mb-2 rounded-xl bg-[rgba(0,0,0,.2)]">
                 <h1 className="text-2xl font-medium">Main Project1</h1>
                 <div className="flex items-center">
@@ -52,7 +52,7 @@ const Project = () => {
                     <button className="p-1 rounded-lg transition-all ease-linear hover:bg-[rgba(255,255,255,0.2)]"><OptionIcon/></button>
                 </div>
             </div>
-            <div className="grid grid-cols-3 items-start h-full overflow-x-scroll pb-16">
+            <div className="grid grid-cols-3 items-start h-full">
                 <div className="flex flex-col mx-2 bg-[rgba(0,0,0,.5)] px-6 py-3 rounded-xl shadow-md">
                     <div className="w-full flex justify-between items-center mb-4">
                         <h1 className="text-base font-medium">To do</h1>

@@ -36,6 +36,10 @@ div {
   font-size: clamp(0.75rem, 1rem, 1rem);
 }
 
+#root {
+  min-height: 100vh;
+}
+
 body {
   width: 100%;
   min-height: 100vh;
