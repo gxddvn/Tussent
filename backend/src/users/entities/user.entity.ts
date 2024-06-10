@@ -1,0 +1,30 @@
+import { Calendar } from 'src/calendar/entities/calendar.entity';
+import { ProjectTodo } from 'src/projects-todo/entities/project-todo.entity';
+import { Project } from 'src/projects/entities/project.entity';
+import { Workspace } from 'src/workspaces/entities/workspace.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+
+@Entity()
+export class User {
+    @PrimaryGeneratedColumn("uuid")
+    id: string;
+    @Column()
+    email: string;
+    @Column()
+    name: string;
+    @Column()
+    password: string;
+    @CreateDateColumn({ type: 'timestamptz' })
+    createdAt: Date;
+    @UpdateDateColumn({ type: 'timestamptz' })
+    updatedAt: Date;
+    
+    @OneToMany(() => Workspace, (workspace) => workspace.user)
+    workspace: Workspace[]
+    @OneToMany(() => Project, (project) => project.user)
+    project: Project[]
+    @OneToMany(() => ProjectTodo, (project_todo) => project_todo.user)
+    project_todo: ProjectTodo[]
+    @OneToMany(() => Calendar, (calendar) => calendar.user)
+    calendar: Calendar[]
+}
