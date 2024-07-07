@@ -1,12 +1,8 @@
 import { Module } from '@nestjs/common';
-import { UsersController } from './users/users.controller';
-import { UsersService } from './users/users.service';
 import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity';
-import { WorkspacesController } from './workspaces/workspaces.controller';
-import { WorkspacesService } from './workspaces/workspaces.service';
 import { WorkspacesModule } from './workspaces/workspaces.module';
 import { ProjectsModule } from './projects/projects.module';
 import { Workspace } from './workspaces/entities/workspace.entity';
@@ -35,7 +31,5 @@ import { Calendar } from './calendar/entities/calendar.entity';
     }), 
     UsersModule, WorkspacesModule, ProjectsModule, ProjectsTodoModule, CalendarModule
   ],
-  controllers: [UsersController, WorkspacesController],
-  providers: [UsersService, WorkspacesService],
 })
 export class AppModule {}
