@@ -1,3 +1,4 @@
+import { IsNotEmpty } from 'class-validator';
 import { Calendar } from 'src/calendar/entities/calendar.entity';
 import { ProjectTodo } from 'src/projects-todo/entities/project-todo.entity';
 import { Project } from 'src/projects/entities/project.entity';
@@ -9,10 +10,13 @@ export class User {
     @PrimaryGeneratedColumn("uuid")
     id: string;
     @Column()
+    @IsNotEmpty()
     email: string;
     @Column()
+    @IsNotEmpty()
     name: string;
     @Column()
+    @IsNotEmpty()
     password: string;
     @CreateDateColumn({ type: 'timestamptz' })
     createdAt: Date;
