@@ -12,7 +12,7 @@ const Home = () => {
                         <span className="font-normal text-base ml-2 text-slate-800">Register - it`s free!</span>
                     </div>
                 </div>
-                <img className='max-w-2xl' src="src/components/Home/img1.png" width={`700px`} alt="" />
+                <img className='max-w-[700px] h-auto' src="src/components/Home/img1.png"  alt="" />
             </div>
             
         </div>

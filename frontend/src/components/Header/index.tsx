@@ -38,7 +38,7 @@ const Header = () => {
     return (
         <div className="flex justify-between px-10 py-2 shadow-md">
             {/* <button className="transition-all ease-linear hover:text-black"><MenuIcon className="h-5 w-5 m-1" aria-hidden="true"/></button> */}
-            <NavLink to='/' className="font-medium">Tussent</NavLink>
+            <NavLink to='/' className="text-xl font-medium">Tussent</NavLink>
             <NavLink to="/signin" className="flex items-center justify-center pr-6 transition-all ease-linear text-base font-medium hover:text-slate-900"><SignInIcon className="h-5 w-5 m-1" aria-hidden="true"/>Sign In</NavLink>
             {/* <div className="flex">
                 <button className="h-8 border-2 border-black rounded-full mx-1"><BellIcon className="h-5 w-5 m-1" aria-hidden="true"/></button>
