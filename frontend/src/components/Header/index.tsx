@@ -1,4 +1,8 @@
 import { NavLink } from "react-router-dom"
+import { useAppSelector } from "../Hooks"
+import { selectAuthData } from "../../store/Slices/auth"
+import CustomDropDownMenu from "../CustomDropDownMenu"
+import { MenuItem } from "@headlessui/react"
 
 function MenuIcon(props:any) {
     return (
@@ -35,15 +39,42 @@ function SignInIcon(props:any) {
 
 
 const Header = () => {
+    const user = useAppSelector(selectAuthData)
+    
     return (
         <div className="flex justify-between px-10 py-2 shadow-md">
-            {/* <button className="transition-all ease-linear hover:text-black"><MenuIcon className="h-5 w-5 m-1" aria-hidden="true"/></button> */}
-            <NavLink to='/' className="text-xl font-medium">Tussent</NavLink>
-            <NavLink to="/signin" className="flex items-center justify-center pr-6 transition-all ease-linear text-base font-medium hover:text-slate-900"><SignInIcon className="h-5 w-5 m-1" aria-hidden="true"/>Sign In</NavLink>
-            {/* <div className="flex">
-                <button className="h-8 border-2 border-black rounded-full mx-1"><BellIcon className="h-5 w-5 m-1" aria-hidden="true"/></button>
-                <button className="h-8 border-2 border-black rounded-full mx-1"><UserIcon className="h-5 w-5 m-1" aria-hidden="true"/></button>
-            </div> */}
+            {!user.IsAuth ? (
+                <>
+                    <NavLink to='/' className="text-xl font-medium">Tussent</NavLink>
+                    <NavLink to="/signin" className="flex items-center justify-center pr-6 transition-all ease-linear text-base font-medium hover:text-slate-900"><SignInIcon className="h-5 w-5 m-1" aria-hidden="true"/>Sign In</NavLink>
+                </>
+            ) : (
+                <>
+                {/* <button className="transition-all ease-linear hover:text-black"><MenuIcon className="h-5 w-5 m-1" aria-hidden="true"/></button> */}
+                    <CustomDropDownMenu button={<MenuIcon className="h-5 w-5 m-1" aria-hidden="true"/>}>
+                        <MenuItem>
+                            <NavLink className="block transition-all ease-linear hover:data-[focus]:bg-slate-200 rounded-lg p-1" to={`userworkspace/${user.user?.workspaceId}`}>
+                                Workspaces
+                            </NavLink>
+                        </MenuItem>
+                        <MenuItem>
+                            <NavLink className="block transition-all ease-linear hover:data-[focus]:bg-slate-200 rounded-lg p-1" to={`user/${user.user?.id}/calendar`}>
+                                Calendar
+                            </NavLink>
+                        </MenuItem>
+                        <MenuItem>
+                            <NavLink className="block transition-all ease-linear hover:data-[focus]:bg-slate-200 rounded-lg p-1" to="/">
+                                Log Out
+                            </NavLink>
+                        </MenuItem>
+                    </CustomDropDownMenu>
+                    <NavLink to='/' className="text-xl font-medium text-center">Tussent</NavLink>
+                    <div className="flex">
+                        <button className="transition-all ease-linear hover:text-black"><BellIcon className="h-5 w-5 m-1" aria-hidden="true"/></button>
+                        <button className="transition-all ease-linear hover:text-black"><UserIcon className="h-5 w-5 m-1" aria-hidden="true"/></button>
+                    </div>
+                </>
+            )}
         </div>
     )
 }

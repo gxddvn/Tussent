@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { UsersForReq } from './dto/usersforreq.dto';
-import { UserForReg } from './dto/userforreg.dto';
+import { EmailVerifDto, UserForReg } from './dto/userforreg.dto';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { Request } from 'express';
 import { UserForAuth } from './dto/userforauth.dto';
@@ -10,7 +10,7 @@ import { UserForAuth } from './dto/userforauth.dto';
 
 @Controller('users')
 export class UsersController {
-    constructor(private readonly userService: UsersService) {}
+    constructor(private readonly userService: UsersService,) {}
     @Get()
     @UseGuards(JwtAuthGuard)
     getAll(): Promise<UsersForReq[]> {
@@ -27,6 +27,16 @@ export class UsersController {
         return this.userService.registration(user);
     }
 
+    @Post('email/verif')
+    email_verif(@Body() {email, emailHtml}:EmailVerifDto) {
+        return this.userService.email_verif({email, emailHtml})
+    }
+
+    @Post('email/verif/check')
+    checkEmailVerif(@Body('email') email: string, @Body('code') code: string): Promise<boolean> {
+        return this.userService.checkEmailVerif(email, code)
+    }
+
     @Post('login')
     login(@Body() user: UserForAuth): Promise<string | User> {
         return this.userService.login(user);
@@ -35,6 +45,7 @@ export class UsersController {
     @Post('auth')
     @UseGuards(JwtAuthGuard)
     checkAuth(@Req() req: Request) {
+        console.log("auth")
         return this.userService.checkAuth(req.user);
     }
 

@@ -39,8 +39,24 @@ export class ProjectsService {
         return this.projectsRepository.findOneBy({id})
     }
 
-    async getAllById(id: string): Promise<Project[] | null> {
-        return this.projectsRepository.find({where: {user: {id}}})
+    async getAllById(id: string, limit: number): Promise<Project[] | null> {
+        console.log(id, limit)
+        const data = await this.projectsRepository.find({
+            where: {workspace: {id}}, 
+            take: limit,
+        })
+        console.log(data)
+        return data
+    }
+
+    async getRecentlyById(id:string): Promise<Project[] | null> {
+        return this.projectsRepository.find({
+            where: {workspace: {id}},
+            order: {
+                updatedAt: 'DESC',
+            },
+            take: 5,
+        })
     }
 
     async updateProject(project: Project): Promise<Project | null> {

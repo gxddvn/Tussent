@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { NavLink } from "react-router-dom";
+import { Navigate, NavLink } from "react-router-dom";
 import CustomModal from "../../CustomModal";
 import ConfirmEmail from "./ConfirmEmail";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { useAppSelector } from "../../Hooks";
+import { selectIsAuth } from "../../../store/Slices/auth";
+import { render } from "@react-email/render";
+import TemplateEmail from "./TemplateEmail";
+import axios from "../../../axios";
 
 interface formValue {
     email: string;
@@ -15,7 +20,13 @@ interface formValue {
 
 const SignUp = () => {
     const [isOpen, setIsOpen] = useState(false)
-    const [isCode, setIsCode] = useState("")
+    const isAuth = useAppSelector(selectIsAuth);
+    let userValues = useRef<formValue>({
+        email: "",
+        name: "",
+        password: "",
+        con_pass: "",
+    });
     const notify = (mess:string) => {
         toast.error(mess, {
             position: "bottom-right",
@@ -45,28 +56,34 @@ const SignUp = () => {
     });
 
     const onSubmit = async (values:formValue) => {
+        const {email} = values;
+        userValues.current = values;
         console.log(values)
         if(values.password == values.con_pass) {
             console.log("Send confirm message on email!")
-            setIsCode("4556")
+            const emailHtml = await render(<TemplateEmail/>, { pretty: true, });
+            axios.post('users/email/verif', {email, emailHtml})
+            .then((res)=>{
+                console.log(res.data);
+            })
+            .catch((err) => {
+                console.warn(err);
+                alert("Error!");
+            });
             setIsOpen(true);
         }
         else {
             notify("Wrong password")
         }
-        // reset();
-        // const data = await dispatch(fetchAuth(values));
-        // if (!data.payload) {
-        //     alert("Не вдалось авторизуватися, не правильний пароль або пошта!");
-        // }
+        reset();
     };
 
-    
+    if (isAuth) return <Navigate to='/' />;
 
     return (
         <div className=" relative flex items-center justify-center mt-16">
             <CustomModal isOpen={isOpen} onClose={() => setIsOpen(!isOpen)} title="Confirm email">
-                <ConfirmEmail isCode={isCode} onClose={() => setIsOpen(!isOpen)} notify={() => notify("Wrong Code!")}/>
+                <ConfirmEmail onClose={() => setIsOpen(!isOpen)} notify={() => notify("Wrong Code!")} userValues={userValues.current}/>
             </CustomModal>
             <div className="text-base font-normal text-slate-800">
                 <ToastContainer />

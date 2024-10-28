@@ -2,6 +2,9 @@ import { useState } from "react"
 import CustomModal from "../../CustomModal"
 import { useForm } from "react-hook-form"
 import { NavLink } from "react-router-dom"
+import { useAppDispatch, useAppSelector } from "../../Hooks"
+import { fetchCreateProject, selectWorkspaceData } from "../../../store/Slices/workspace"
+import { selectAuthData } from "../../../store/Slices/auth"
 
 function RecentlyViewedIcon(props:any) {
     return (
@@ -20,7 +23,10 @@ function WorkSpaceIcom(props:any) {
 }
 
 const WorkSpace = () => {
+    const dispatch = useAppDispatch();
     const [isOpen, setIsOpen] = useState(false)
+    const workspaceData = useAppSelector(selectWorkspaceData)
+    const authData = useAppSelector(selectAuthData)
 
     const {
         register, 
@@ -35,13 +41,12 @@ const WorkSpace = () => {
     });
 
     const onSubmit = async (values:{name:string}) => {
-        console.log(values)
         setIsOpen(false)
         reset();
-        // const data = await dispatch(fetchAuth(values));
-        // if (!data.payload) {
-        //     alert("Не вдалось авторизуватися, не правильний пароль або пошта!");
-        // }
+        const data = await dispatch(fetchCreateProject({name: values.name, user: String(authData.user?.id), workspace: String(authData.user?.workspaceId)}));
+        if (!data.payload) {
+            alert("Error");
+        }
     };
     return (
         <div className="pb-28 pt-10">
@@ -75,33 +80,11 @@ const WorkSpace = () => {
                 <button onClick={() => setIsOpen(!isOpen)} className="flex justify-center items-center p-6 bg-slate-800 rounded-xl transition-all ease-linear hover:bg-slate-900 cursor-pointer">
                     <span className="text-base font-medium">+</span>
                 </button>
-                <div className="flex justify-center items-center p-6 bg-slate-800 rounded-xl transition-all ease-linear hover:bg-slate-900 cursor-pointer">
-                    <span className="text-base font-medium">Main project1</span>
-                </div>
-                <div className="flex justify-center items-center p-6 bg-slate-800 rounded-xl transition-all ease-linear hover:bg-slate-900 cursor-pointer">
-                    <span className="text-base font-medium">Main project2</span>
-                </div>
-                <div className="flex justify-center items-center p-6 bg-slate-800 rounded-xl transition-all ease-linear hover:bg-slate-900 cursor-pointer">
-                    <span className="text-base font-medium">Main project3</span>
-                </div>
-                <div className="flex justify-center items-center p-6 bg-slate-800 rounded-xl transition-all ease-linear hover:bg-slate-900 cursor-pointer">
-                    <span className="text-base font-medium">Main project4</span>
-                </div>
-                <div className="flex justify-center items-center p-6 bg-slate-800 rounded-xl transition-all ease-linear hover:bg-slate-900 cursor-pointer">
-                    <span className="text-base font-medium">Main project5</span>
-                </div>
-                <div className="flex justify-center items-center p-6 bg-slate-800 rounded-xl transition-all ease-linear hover:bg-slate-900 cursor-pointer">
-                    <span className="text-base font-medium">Main project6</span>
-                </div>
-                <div className="flex justify-center items-center p-6 bg-slate-800 rounded-xl transition-all ease-linear hover:bg-slate-900 cursor-pointer">
-                    <span className="text-base font-medium">Main project7</span>
-                </div>
-                <div className="flex justify-center items-center p-6 bg-slate-800 rounded-xl transition-all ease-linear hover:bg-slate-900 cursor-pointer">
-                    <span className="text-base font-medium">Main project8</span>
-                </div>
-                <div className="flex justify-center items-center p-6 bg-slate-800 rounded-xl transition-all ease-linear hover:bg-slate-900 cursor-pointer">
-                    <span className="text-base font-medium">Main project9</span>
-                </div>
+                {workspaceData.userWorkspace?.map((project, index) => (
+                    <NavLink to={`project/${project.id}`} key={index} className="flex justify-center items-center p-6 bg-slate-800 rounded-xl transition-all ease-linear hover:bg-slate-900 cursor-pointer">
+                        <span className="text-base font-medium">{project.name}</span>
+                    </NavLink>
+                ))}
             </div>
         </div>
     )

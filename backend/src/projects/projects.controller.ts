@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { ProjectCreate } from './dto/projectcreate.dto';
 import { Project } from './entities/project.entity';
@@ -23,8 +23,13 @@ export class ProjectsController {
     }
     
     @Get("allbyid/:id")
-    getAllById(@Param('id') id: string): Promise<Project[] | null> {
-        return this.projectsService.getAllById(id)
+    getAllById(@Param('id') id: string, @Query('limit') limit: number = 14): Promise<Project[] | null> {
+        return this.projectsService.getAllById(id, limit)
+    }
+
+    @Get("recentlybyid/:id")
+    getRecentlyById(@Param('id') id: string): Promise<Project[] | null> {
+        return this.projectsService.getRecentlyById(id);
     }
 
     @Put("update")

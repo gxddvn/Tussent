@@ -1,17 +1,28 @@
+import axios from "../../../../axios";
 import { useForm } from "react-hook-form";
+import { useAppDispatch } from "../../../Hooks";
+import { fetchRegister } from "../../../../store/Slices/auth";
 // import { ToastContainer, toast } from "react-toastify";
 
 interface ConfirmEmailProps {
-    isCode: string;
     onClose: () => void;
     notify: (mess:string) => void;
+    userValues: userValue;
+}
+
+interface userValue {
+    email: string;
+    name: string;
+    password: string;
+    con_pass: string;
 }
 
 interface formValue2 {
     code: string;
 }
 
-const ConfirmEmail: React.FC<ConfirmEmailProps> = ({isCode, onClose, notify}) => {
+const ConfirmEmail: React.FC<ConfirmEmailProps> = ({onClose, notify, userValues}) => {
+    const dispatch = useAppDispatch()
     const {
         register, 
         handleSubmit, 
@@ -25,14 +36,25 @@ const ConfirmEmail: React.FC<ConfirmEmailProps> = ({isCode, onClose, notify}) =>
     });
 
     const onSubmit = async (value:formValue2) => {
+        const {code} = value
+        const {name, email, password } = userValues
         console.log(value)
-        if (value.code == isCode) {
+        console.log(email)
+        const data = await axios.post('/users/email/verif/check', {email, code})
+        console.log(data)
+        if (data.data) {
             console.log("Confirmed!")
+            const dataDispatch = await dispatch(fetchRegister({name, email, password}));
+            console.log(dataDispatch)
+            if (!dataDispatch.payload) {
+                notify("Failed registration!");
+            }
         }
         else {
             console.log("Wrong Code!")
             notify("Wrong Code!");
         }
+        reset();
         onClose();
     }
 

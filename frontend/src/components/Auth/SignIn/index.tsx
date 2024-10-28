@@ -1,8 +1,12 @@
 import { useForm } from "react-hook-form";
-import { NavLink } from "react-router-dom";
+import { Navigate, NavLink } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../Hooks";
+import { fetchAuth, selectIsAuth } from "../../../store/Slices/auth";
+import { toast, ToastContainer } from "react-toastify";
 
 const SignIn = () => {
-
+    const dispatch = useAppDispatch();
+    const isAuth = useAppSelector(selectIsAuth);
     const {
         register, 
         handleSubmit, 
@@ -16,14 +20,29 @@ const SignIn = () => {
         mode: "onBlur",
     });
 
+    const notify = (mess:string) => {
+        toast.error(mess, {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
+    }
+
     const onSubmit = async (values:any) => {
-        console.log(values)
-        // reset();
-        // const data = await dispatch(fetchAuth(values));
-        // if (!data.payload) {
-        //     alert("Не вдалось авторизуватися, не правильний пароль або пошта!");
-        // }
+        const data = await dispatch(fetchAuth(values))
+        if (!data.payload) {
+            notify("Login failed, password or email address is incorrect!")
+            alert("Login failed, password or email address is incorrect!");
+        }
+        reset();
     };
+
+    if (isAuth) return <Navigate to='/' />;
 
     return (
         <div className="flex items-center justify-center mt-16">
@@ -48,6 +67,9 @@ const SignIn = () => {
                 </div>
                 <p className="text-sm font-normal text-center">Don't have an account? <NavLink className="text-sm font-medium text-cyan-400 transition-all ease-linear hover:text-cyan-950" to='/signup'>Sign Up</NavLink></p>
             </form>
+            <div className="text-base font-normal text-slate-800">
+                <ToastContainer />
+            </div>
         </div>
     )
 }

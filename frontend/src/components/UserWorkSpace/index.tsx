@@ -1,5 +1,10 @@
 import { NavLink } from "react-router-dom"
 import { Outlet } from "react-router-dom"
+import { useAppDispatch, useAppSelector } from "../Hooks"
+import { selectAuthData } from "../../store/Slices/auth"
+import { useDispatch } from "react-redux"
+import { useEffect } from "react"
+import { fetchWorkspaceMe } from "../../store/Slices/workspace"
 
 function HomeIcon(props:any) {
     return (
@@ -18,12 +23,22 @@ function FolderProjectsIcon(props:any) {
 }
 
 const UserWorkSpace = () => {
-    
+    const dispatch = useAppDispatch();
+    const authData = useAppSelector(selectAuthData)
+
+    useEffect(() => {
+        if (authData?.user) {
+            dispatch(fetchWorkspaceMe({workspaceId: `${authData.user?.workspaceId}`, limit: 15}))
+            // dispatch(setWorkspaceId(authData.user?.id))
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [authData.user])
+
     return (
         <div className="flex h-full">
             <div className="px-2 pt-2 pb-16 bg-[rgba(0,0,0,.3)] fixed h-full flex flex-col justify-between">
                 <div>
-                    <NavLink to='/userworkspace/ffff' className=" flex p-3 bg-slate-800 shadow-md rounded-xl cursor-pointer transition-all ease-linear hover:bg-slate-900">
+                    <NavLink to={`/userworkspace/${authData.user?.workspaceId}`} className=" flex p-3 bg-slate-800 shadow-md rounded-xl cursor-pointer transition-all ease-linear hover:bg-slate-900">
                         <HomeIcon className="h-5 w-5 m-1" aria-hidden="true"/>
                     </NavLink>
                 </div>

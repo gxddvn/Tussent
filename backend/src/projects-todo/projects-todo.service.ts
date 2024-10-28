@@ -39,7 +39,7 @@ export class ProjectsTodoService {
     }
 
     async getAllByIdProjectTodo(id: string): Promise<ProjectTodo[] | null> {
-        return this.projectTodoRepository.find({where: {user: {id}}})
+        return this.projectTodoRepository.find({where: {project: {id}}})
     }
 
     async updateProjectTodo(project_todo: ProjectTodo): Promise<ProjectTodo | null> {
@@ -47,7 +47,11 @@ export class ProjectsTodoService {
     }
 
     async deleteProjectTodo(id: string): Promise<void> {
-        let project_todo = await this.projectTodoRepository.findOneBy({id})
-        await this.projectTodoRepository.delete(project_todo)
+        const project_todo = await this.projectTodoRepository.findOneBy({ id });    
+        if (project_todo) {
+            await this.projectTodoRepository.delete({ id });
+        } else {
+            console.log("Project todo not found");
+        }
     }
 }
