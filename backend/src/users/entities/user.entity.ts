@@ -1,5 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 import { Calendar } from 'src/calendar/entities/calendar.entity';
+import { ProjectInvite } from 'src/project-invites/entities/project-invite.entity';
 import { ProjectTodo } from 'src/projects-todo/entities/project-todo.entity';
 import { Project } from 'src/projects/entities/project.entity';
 import { Workspace } from 'src/workspaces/entities/workspace.entity';
@@ -31,4 +32,6 @@ export class User {
     project_todo: ProjectTodo[]
     @OneToMany(() => Calendar, (calendar) => calendar.user)
     calendar: Calendar[]
+    @OneToMany(() => ProjectInvite, (project_invite) => project_invite.user)
+    project_invite: ProjectInvite[]
 }

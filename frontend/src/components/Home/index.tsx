@@ -5,7 +5,7 @@ import { selectAuthData } from "../../store/Slices/auth";
 const Home = () => {
     const authData = useAppSelector(selectAuthData)
     return (
-        <div className=" min-h-full pt-20">
+        <div className=" pt-20">
             <div className="flex justify-center items-center ">
                 <div className="max-w-96">
                     <h1 className="text-2xl font-medium"><span className="font-semibold text-3xl text-slate-800">Tussent</span> enables you to bring together all your employees, tasks, and tools in one place.</h1>

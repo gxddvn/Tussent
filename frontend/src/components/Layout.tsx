@@ -7,7 +7,7 @@ const Layout = () => {
     return (
         <>
             <Header/> 
-            <div className='relative h-full my-0 mx-auto'>
+            <div className='relative my-0 flex flex-col flex-grow overflow-y-auto'>
                 <Outlet />
             </div>
             {/* <Footer /> */}

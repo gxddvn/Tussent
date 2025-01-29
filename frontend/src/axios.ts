@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError }  from "axios";
 import { getCookie } from "./cookies";
 
 const instance = axios.create({
@@ -11,3 +11,4 @@ instance.interceptors.request.use((config) => {
 });
 
 export default instance;
+export { AxiosError };

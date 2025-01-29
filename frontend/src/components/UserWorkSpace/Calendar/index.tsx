@@ -123,7 +123,7 @@ const Calendar = () => {
     };
 
     return (
-        <div className="flex flex-col h-screen px-5 pt-5 pb-16 overflow-y-scroll">
+        <div className="flex flex-col h-screen px-5 pt-5 pb-3 overflow-y-auto">
             <div className="flex items-center bg-[rgba(0,0,0,.3)] px-5 py-4 rounded-2xl shadow-md">
                 <select value={currentDate.getMonth()} onChange={handleMonthChange} className="text-lg font-medium p-1 rounded-lg text-white bg-[rgba(0,0,0,.3)] shadow-md">
                     <option className="text-sm font-medium text-white bg-none" value="0">January</option>

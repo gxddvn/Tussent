@@ -1,8 +1,9 @@
 import { NavLink } from "react-router-dom"
-import { useAppSelector } from "../Hooks"
-import { selectAuthData } from "../../store/Slices/auth"
+import { useAppDispatch, useAppSelector } from "../Hooks"
+import { logout, selectAuthData } from "../../store/Slices/auth"
 import CustomDropDownMenu from "../CustomDropDownMenu"
 import { MenuItem } from "@headlessui/react"
+import { deleteWorkspace } from "../../store/Slices/workspace"
 
 function MenuIcon(props:any) {
     return (
@@ -38,9 +39,18 @@ function SignInIcon(props:any) {
 
 
 
+
+
 const Header = () => {
     const user = useAppSelector(selectAuthData)
-    
+    const dispatch = useAppDispatch();
+
+    const onClickLogout = () => {
+        if (window.confirm("Do you want to logout?")) {
+            dispatch(logout())
+            dispatch(deleteWorkspace())
+        }
+    }
     return (
         <div className="flex justify-between px-10 py-2 shadow-md">
             {!user.IsAuth ? (
@@ -53,24 +63,34 @@ const Header = () => {
                 {/* <button className="transition-all ease-linear hover:text-black"><MenuIcon className="h-5 w-5 m-1" aria-hidden="true"/></button> */}
                     <CustomDropDownMenu button={<MenuIcon className="h-5 w-5 m-1" aria-hidden="true"/>}>
                         <MenuItem>
-                            <NavLink className="block transition-all ease-linear hover:data-[focus]:bg-slate-200 rounded-lg p-1" to={`userworkspace/${user.user?.workspaceId}`}>
+                            <NavLink className="block transition-all ease-linear hover:data-[focus]:bg-[rgba(255,255,255,.2)] rounded-lg p-1 text-sm" to={`userworkspace/${user.user?.workspaceId}`}>
                                 Workspaces
                             </NavLink>
                         </MenuItem>
                         <MenuItem>
-                            <NavLink className="block transition-all ease-linear hover:data-[focus]:bg-slate-200 rounded-lg p-1" to={`user/${user.user?.id}/calendar`}>
+                            <NavLink className="block transition-all ease-linear hover:data-[focus]:bg-[rgba(255,255,255,.2)] rounded-lg p-1 text-sm" to={`user/${user.user?.id}/calendar`}>
                                 Calendar
                             </NavLink>
                         </MenuItem>
                         <MenuItem>
-                            <NavLink className="block transition-all ease-linear hover:data-[focus]:bg-slate-200 rounded-lg p-1" to="/">
+                            <NavLink className="block transition-all ease-linear hover:data-[focus]:bg-[rgba(255,255,255,.2)] rounded-lg p-1 text-sm" onClick={onClickLogout} to="/">
                                 Log Out
                             </NavLink>
                         </MenuItem>
                     </CustomDropDownMenu>
                     <NavLink to='/' className="text-xl font-medium text-center">Tussent</NavLink>
                     <div className="flex">
-                        <button className="transition-all ease-linear hover:text-black"><BellIcon className="h-5 w-5 m-1" aria-hidden="true"/></button>
+                        <CustomDropDownMenu button={<BellIcon className="h-5 w-5 m-1" aria-hidden="true"/>}>
+                            <MenuItem>
+                                {/* <NavLink className="block transition-all ease-linear hover:data-[focus]:bg-[rgba(255,255,255,.2)] rounded-lg p-1" to={`userworkspace/${user.user?.workspaceId}`}>
+                                    Workspaces
+                                </NavLink> */}
+                                <div className="min-w-[300px] overflow-hidden flex items-center justify-center py-4">
+                                    <span className="opacity-70">No notifications</span>
+                                </div>
+                            </MenuItem>
+                        </CustomDropDownMenu>
+                        {/* <button className="transition-all ease-linear hover:text-black"><BellIcon className="h-5 w-5 m-1" aria-hidden="true"/></button> */}
                         <button className="transition-all ease-linear hover:text-black"><UserIcon className="h-5 w-5 m-1" aria-hidden="true"/></button>
                     </div>
                 </>

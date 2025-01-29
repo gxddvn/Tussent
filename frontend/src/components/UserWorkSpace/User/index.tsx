@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom'
 
 const User = () => {
     return (
-        <div className='min-h-full'>
+        <div className=''>
             <Outlet/>
         </div>
     )

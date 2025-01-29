@@ -1,10 +1,19 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import CustomModal from "../../CustomModal"
 import { useForm } from "react-hook-form"
 import { NavLink } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../../Hooks"
 import { fetchCreateProject, selectWorkspaceData } from "../../../store/Slices/workspace"
 import { selectAuthData } from "../../../store/Slices/auth"
+import axios from "../../../axios"
+import { toast, ToastContainer } from "react-toastify"
+
+interface ItemsInterface {
+    id: string;
+    name: string;
+    createdAt: string;
+    updateAt: string;
+}
 
 function RecentlyViewedIcon(props:any) {
     return (
@@ -25,8 +34,24 @@ function WorkSpaceIcom(props:any) {
 const WorkSpace = () => {
     const dispatch = useAppDispatch();
     const [isOpen, setIsOpen] = useState(false)
+    const [recentlyItems, setRecentlyItems] = useState<ItemsInterface[]>()
     const workspaceData = useAppSelector(selectWorkspaceData)
     const authData = useAppSelector(selectAuthData)
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const { data } = await axios.get(`projects/recentlybyid/${authData.user?.workspaceId}`) 
+                console.log(data)
+                setRecentlyItems(data)
+            } catch (error) {
+                console.error("Error fetching data:", error)
+            }
+        }
+        if (authData.IsAuth) {
+            fetchData()
+        }
+    }, [authData.IsAuth])
 
     const {
         register, 
@@ -40,16 +65,32 @@ const WorkSpace = () => {
         mode: "onBlur",
     });
 
+    const notify = (mess:string) => {
+        toast.error(mess, {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
+    }
+    
     const onSubmit = async (values:{name:string}) => {
         setIsOpen(false)
         reset();
         const data = await dispatch(fetchCreateProject({name: values.name, user: String(authData.user?.id), workspace: String(authData.user?.workspaceId)}));
+        if (data.payload && typeof data.payload === 'object' && 'error' in data.payload) {
+            notify(data.payload.error as string)
+        }
         if (!data.payload) {
             alert("Error");
         }
     };
     return (
-        <div className="pb-28 pt-10">
+        <div className="flex flex-col pt-10">
             <CustomModal isOpen={isOpen} onClose={() => setIsOpen(!isOpen)} title="Create project">
                 <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
                     <div className="flex items-center justify-between">
@@ -62,18 +103,15 @@ const WorkSpace = () => {
                     </div>
                 </form>
             </CustomModal>
+            <ToastContainer />
             <h1 className="text-3xl font-semibold mb-5">Your Workspace</h1>
             <h2 className="flex items-center text-lg font-medium"><RecentlyViewedIcon className="h-6 w-6 mr-1" aria-hidden="true"/>Recently Viewed</h2>
             <div className="flex items-center py-6">
-                <NavLink to='project/gdff' className="flex justify-center items-center p-6 bg-slate-800 rounded-xl mx-2 transition-all ease-linear hover:bg-slate-900 cursor-pointer">
-                    <span className="text-base font-medium">Main project1</span>
-                </NavLink>
-                <div className="flex justify-center items-center p-6 bg-slate-800 rounded-xl mx-2 transition-all ease-linear hover:bg-slate-900 cursor-pointer">
-                    <span className="text-base font-medium">Main project2</span>
-                </div>
-                <div className="flex justify-center items-center p-6 bg-slate-800 rounded-xl mx-2 transition-all ease-linear hover:bg-slate-900 cursor-pointer">
-                    <span className="text-base font-medium">Main project3</span>
-                </div>
+                {recentlyItems && recentlyItems?.map((items, index) => (
+                    <NavLink key={index} to={`project/${items.id}`} className="flex justify-center items-center p-6 bg-slate-800 rounded-xl mx-2 transition-all ease-linear hover:bg-slate-900 cursor-pointer">
+                        <span className="text-base font-medium">{items.name}</span>
+                    </NavLink>
+                ))}
             </div>
             <h2 className="flex text-lg font-medium mt-7"><WorkSpaceIcom className="h-6 w-6 mr-1" aria-hidden="true"/>All projects</h2>
             <div className="grid gap-4 grid-cols-5 py-6">
@@ -81,7 +119,7 @@ const WorkSpace = () => {
                     <span className="text-base font-medium">+</span>
                 </button>
                 {workspaceData.userWorkspace?.map((project, index) => (
-                    <NavLink to={`project/${project.id}`} key={index} className="flex justify-center items-center p-6 bg-slate-800 rounded-xl transition-all ease-linear hover:bg-slate-900 cursor-pointer">
+                    <NavLink to={`/userworkspace/${authData.user?.workspaceId}/project/${project.id}`} key={index} className="flex justify-center items-center p-6 bg-slate-800 rounded-xl transition-all ease-linear hover:bg-slate-900 cursor-pointer">
                         <span className="text-base font-medium">{project.name}</span>
                     </NavLink>
                 ))}

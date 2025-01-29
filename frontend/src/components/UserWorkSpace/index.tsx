@@ -2,9 +2,23 @@ import { NavLink } from "react-router-dom"
 import { Outlet } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../Hooks"
 import { selectAuthData } from "../../store/Slices/auth"
-import { useDispatch } from "react-redux"
-import { useEffect } from "react"
-import { fetchWorkspaceMe } from "../../store/Slices/workspace"
+import { useEffect, useState } from "react"
+import { fetchCreateProject, fetchWorkspaceMe, selectFavoriteData } from "../../store/Slices/workspace"
+import Tooltip from '@mui/material/Tooltip';
+import { styled, tooltipClasses, TooltipProps } from "@mui/material"
+import { useForm } from "react-hook-form"
+import CustomModal from "../CustomModal"
+import { toast, ToastContainer } from "react-toastify"
+
+
+const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+    ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+        backgroundColor: 'rgba(0,0,0,.3)',
+        boxShadow: theme.shadows[1],
+    },
+}));
 
 function HomeIcon(props:any) {
     return (
@@ -25,44 +39,94 @@ function FolderProjectsIcon(props:any) {
 const UserWorkSpace = () => {
     const dispatch = useAppDispatch();
     const authData = useAppSelector(selectAuthData)
-
+    const favoriteData = useAppSelector(selectFavoriteData) || []
+    const [isOpen, setIsOpen] = useState(false)
     useEffect(() => {
         if (authData?.user) {
             dispatch(fetchWorkspaceMe({workspaceId: `${authData.user?.workspaceId}`, limit: 15}))
-            // dispatch(setWorkspaceId(authData.user?.id))
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [authData.user])
 
+    const {
+        register, 
+        handleSubmit, 
+        formState: { errors, isValid },
+        reset
+    } = useForm({ 
+        defaultValues: {
+            name: "",
+        }, 
+        mode: "onBlur",
+    });
+
+    const notify = (mess:string) => {
+        toast.error(mess, {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
+    }
+
+    const onSubmit = async (values:{name:string}) => {
+        setIsOpen(false)
+        reset();
+        const data = await dispatch(fetchCreateProject({name: values.name, user: String(authData.user?.id), workspace: String(authData.user?.workspaceId)}));
+        if (data.payload && typeof data.payload === 'object' && 'error' in data.payload) {
+            notify(data.payload.error as string)
+        }
+        if (!data.payload) {
+            alert("Error");
+        }
+    };
+
     return (
-        <div className="flex h-full">
-            <div className="px-2 pt-2 pb-16 bg-[rgba(0,0,0,.3)] fixed h-full flex flex-col justify-between">
+        <div className="flex flex-grow">
+            <CustomModal isOpen={isOpen} onClose={() => setIsOpen(!isOpen)} title="Create project">
+                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+                    <div className="flex items-center justify-between">
+                        <label className="text-base font-medium" htmlFor="name">Name</label>
+                        <span className='text-xs font-medium text-rose-500'>{errors?.name && "Wrong format!"}</span>
+                    </div>
+                    <input type="text" id="name" className="shadow-md border-2 border-white rounded-lg text-base font-medium px-3 py-1 bg-[rgba(0,0,0,0.1)]" {...register("name", { required: "Enter name!" })}/>
+                    <div className="flex justify-center items-center pt-6">
+                        <button type="submit" disabled={!isValid} className="px-5 py-2 bg-slate-800 text-white rounded-lg transition-all ease-linear hover:bg-slate-900 cursor-pointer">Create</button>
+                    </div>
+                </form>
+            </CustomModal>
+            <ToastContainer />
+            <div className="px-2 pt-2 pb-16 bg-[rgba(0,0,0,.3)] fixed flex h-full flex-col justify-between">
                 <div>
                     <NavLink to={`/userworkspace/${authData.user?.workspaceId}`} className=" flex p-3 bg-slate-800 shadow-md rounded-xl cursor-pointer transition-all ease-linear hover:bg-slate-900">
                         <HomeIcon className="h-5 w-5 m-1" aria-hidden="true"/>
                     </NavLink>
                 </div>
                 <div className="h-full">
-                    <div className="p-3 bg-slate-800 shadow-md rounded-xl cursor-pointer my-2 flex justify-center items-center transition-all ease-linear hover:bg-slate-900">
-                        <span className=" text-base font-medium">F</span>
-                    </div>
-                    <div className="p-3 bg-slate-800 shadow-md rounded-xl cursor-pointer my-2 flex justify-center items-center transition-all ease-linear hover:bg-slate-900">
-                        <span className=" text-base font-medium">A</span>
-                    </div>
-                    <div className="p-3 bg-slate-800 shadow-md rounded-xl cursor-pointer my-2 flex justify-center items-center transition-all ease-linear hover:bg-slate-900">
-                        <span className=" text-base font-medium">K</span>
-                    </div>
+                    {favoriteData.userFavorite?.map((project, index) => (
+                        <CustomTooltip key={index} title={project.name} placement="right">
+                            <NavLink to={`project/${project.id}`} className="p-3 bg-slate-800 shadow-md rounded-xl cursor-pointer my-2 flex justify-center items-center transition-all ease-linear hover:bg-slate-900">
+                                <span className=" text-base font-medium">{project.name[0]}</span>
+                            </NavLink>
+                        </CustomTooltip>
+                    ))}
                 </div>
                 <div>
-                    <div className="p-3 bg-slate-800 shadow-md rounded-xl cursor-pointer transition-all ease-linear hover:bg-slate-900">
-                        <FolderProjectsIcon className="h-5 w-5 m-1" aria-hidden="true"/>
-                    </div>
-                    <div className="p-3 bg-slate-800 shadow-md rounded-xl cursor-pointer transition-all ease-linear hover:bg-slate-900 flex justify-center items-center mt-2">
+                    <CustomTooltip title="Folder" placement="right">
+                        <div className="p-3 bg-slate-800 shadow-md rounded-xl cursor-pointer transition-all ease-linear hover:bg-slate-900">
+                            <FolderProjectsIcon className="h-5 w-5 m-1" aria-hidden="true"/>
+                        </div>
+                    </CustomTooltip>
+                    <div onClick={() => setIsOpen(!isOpen)} className="p-3 bg-slate-800 shadow-md rounded-xl cursor-pointer transition-all ease-linear hover:bg-slate-900 flex justify-center items-center mt-2">
                         <span className="text-base font-medium">+</span>
                     </div>
                 </div>
             </div>
-            <div className="w-full pl-40 pr-20 h-full overflow-y-scroll">
+            <div className=" flex-grow w-full pl-40 pr-20">
                 <Outlet/>
             </div>
         </div>

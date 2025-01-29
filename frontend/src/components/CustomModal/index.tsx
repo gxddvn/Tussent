@@ -20,7 +20,7 @@ const CustomModal: React.FC<CustomModalProps> = ({ isOpen, onClose, title, child
             <div className="relative px-10 py-6 rounded-2xl bg-slate-100 text-slate-800">
                 <div className="flex justify-between mb-6">
                     <h1 className="font-bold text-2xl mr-10">{title}</h1>
-                    <button className="" onClick={onClose}>&#x2715;</button>
+                    <button onClick={onClose}>&#x2715;</button>
                 </div>
                 {children}
             </div>

@@ -39,11 +39,17 @@ img {
 
 #root {
   min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
 }
 
 body {
   width: 100%;
-  min-height: 100vh;
+  height: 100%;
+  margin: 0;
+  padding: 0;
   overflow: hidden;
   --tw-bg-opacity: 1;
   /* background-color: rgb(17 24 39 / var(--tw-bg-opacity)); */

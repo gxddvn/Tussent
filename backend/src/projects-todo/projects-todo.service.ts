@@ -39,7 +39,12 @@ export class ProjectsTodoService {
     }
 
     async getAllByIdProjectTodo(id: string): Promise<ProjectTodo[] | null> {
-        return this.projectTodoRepository.find({where: {project: {id}}})
+        return this.projectTodoRepository.find({
+            where: {project: {id}}, 
+            order: {updatedAt: 'ASC'},
+            relations: ['user'], 
+            select: {user: {id: true, name: true}}
+        })
     }
 
     async updateProjectTodo(project_todo: ProjectTodo): Promise<ProjectTodo | null> {

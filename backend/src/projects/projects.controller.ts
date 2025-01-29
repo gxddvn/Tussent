@@ -32,6 +32,11 @@ export class ProjectsController {
         return this.projectsService.getRecentlyById(id);
     }
 
+    @Get("favorite/:id")
+    getFavoriteById(@Param('id') id: string): Promise<Project[] | null> {
+        return this.projectsService.getFavoriteById(id)
+    }
+
     @Put("update")
     updateProject(@Body() project: Project): Promise<Project | null> {
         return this.projectsService.updateProject(project)

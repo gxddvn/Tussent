@@ -8,11 +8,11 @@ import UserWorkSpace from './components/UserWorkSpace'
 import WorkSpace from './components/UserWorkSpace/WorkSpace'
 import Project from './components/UserWorkSpace/Project'
 import Calendar from './components/UserWorkSpace/Calendar'
-import { useAppDispatch, useAppSelector } from './components/Hooks'
+import { useAppDispatch } from './components/Hooks'
 import React from 'react'
-import { fetchAuthMe, selectAuthData } from './store/Slices/auth'
-import { fetchWorkspaceMe } from './store/Slices/workspace'
-// import User from './components/UserWorkSpace/User'
+import { fetchAuthMe } from './store/Slices/auth'
+import ProjectInvities from './components/ProjectInvities'
+
 
 function App() {
   const dispatch = useAppDispatch();
@@ -34,6 +34,7 @@ function App() {
           <Route path='user/:id'>
             <Route path='calendar' element={<Calendar/>}></Route>
           </Route>
+          <Route path='project-invite/' element={<ProjectInvities/>}></Route>
         </Route>
       </Routes>
   )

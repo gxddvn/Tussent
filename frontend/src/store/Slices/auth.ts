@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, createSelector } from "@reduxjs/toolkit";
 import axios from "../../axios";
 import { JwtPayload, jwtDecode } from "jwt-decode";
-import { setCookie } from "../../cookies";
+import { deleteCookie, setCookie } from "../../cookies";
 
 export interface ObjTokenInterface {
     config: {},
@@ -81,6 +81,7 @@ const authSlice = createSlice({
     reducers: {
         logout: (state) => {
             state.user = null;
+            deleteCookie("token")
         },
     },
     extraReducers: (builder) => {
@@ -97,14 +98,21 @@ const authSlice = createSlice({
     },
 });
 
-export const selectIsAuth = (state: { auth: { user: ObjDataInterface | null; }; }) => Boolean(state.auth.user);
+export const selectIsAuth = (state: { auth: { user: ObjDataInterface | null; status: string }; }) => Boolean(state.auth.user);
 export const selectAuthData = createSelector(
-    (state: { auth: { user: ObjDataInterface | null; }; }) => state.auth.user,
-    (user) => ({
-        IsAuth: Boolean(user),
-        user,
+    (state: { auth: { user: ObjDataInterface | null; status: "loading" | "loaded" | "error" }; }) => state.auth,
+    (auth) => ({
+        IsAuth: Boolean(auth.user),
+        user: auth.user,
+        status: auth.status
     })
 );
+
+// export const selectAuthData = (state: { auth: { user: ObjDataInterface | null; status: string }; }) => ({
+//     user : state.auth.user,
+//     IsAuth : Boolean(state.auth.user),
+//     status : state.auth.status
+// })
 
 export const authReducer = authSlice.reducer;
 export const { logout } = authSlice.actions;
