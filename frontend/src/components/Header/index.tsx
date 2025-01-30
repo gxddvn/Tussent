@@ -91,7 +91,7 @@ const Header = () => {
                             </MenuItem>
                         </CustomDropDownMenu>
                         {/* <button className="transition-all ease-linear hover:text-black"><BellIcon className="h-5 w-5 m-1" aria-hidden="true"/></button> */}
-                        <button className="transition-all ease-linear hover:text-black"><UserIcon className="h-5 w-5 m-1" aria-hidden="true"/></button>
+                        <NavLink to={`user/${user.user?.id}/profile`} className="transition-all ease-linear hover:text-black"><UserIcon className="h-5 w-5 m-1" aria-hidden="true"/></NavLink>
                     </div>
                 </>
             )}

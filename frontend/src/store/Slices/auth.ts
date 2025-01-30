@@ -13,12 +13,14 @@ export interface ObjTokenInterface {
 }
 
 export interface ObjDataInterface {
-    id: number,
+    id: string,
     email: string,
     name: string,
-    created_at: string,
-    update_at: string,
-    workspaceId: string
+    createdAt: string,
+    updatedAt: string,
+    workspaceId: string,
+    exp: number,
+    iat: number
 }
 
 export interface ObjDataLogin {
@@ -46,6 +48,13 @@ export const fetchAuth = createAsyncThunk("/auth/fetchAuth", async (params:ObjDa
 
 export const fetchAuthMe = createAsyncThunk("/auth/fetchAuthMe", async () => {
     const data:ObjTokenInterface = await axios.post("/users/auth");
+    setCookie("token", data.data, 7)
+    return jwtDecode<JwtPayload>(data.data);
+});
+
+export const fetchUpdateUser = createAsyncThunk("/auth/fetchUpdateUser", async (params:ObjDataInterface) => {
+    const {exp, iat, ...userWithoutExpIat} = params;
+    const data:ObjTokenInterface = await axios.put(`/users/${params.id}`, userWithoutExpIat);
     setCookie("token", data.data, 7)
     return jwtDecode<JwtPayload>(data.data);
 });
@@ -95,6 +104,9 @@ const authSlice = createSlice({
         .addCase(fetchAuthMe.pending, setLoadingStatus)
         .addCase(fetchAuthMe.fulfilled, setLoadedStatus)
         .addCase(fetchAuthMe.rejected, setErrorStatus)
+        .addCase(fetchUpdateUser.pending, setLoadingStatus)
+        .addCase(fetchUpdateUser.fulfilled, setLoadedStatus)
+        .addCase(fetchUpdateUser.rejected, setErrorStatus)
     },
 });
 

@@ -13,7 +13,6 @@ import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import { Redis } from 'ioredis';
 import { Workspace } from 'src/workspaces/entities/workspace.entity';
-import { use } from 'passport';
 
 @Injectable()
 export class UsersService {
@@ -100,7 +99,6 @@ export class UsersService {
             const {password, ...user} = findUser;
             const workspaceUser = await this.workspaceRepository.findOneBy({user:{id: user.id}})
             const {id, ...workspaceA} = workspaceUser;
-            // console.log(workspaceUser)
             let token = this.jwtService.sign({...user, workspaceId: id})
             return token
         }

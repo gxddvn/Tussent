@@ -12,6 +12,7 @@ import { useAppDispatch } from './components/Hooks'
 import React from 'react'
 import { fetchAuthMe } from './store/Slices/auth'
 import ProjectInvities from './components/ProjectInvities'
+import Profile from './components/UserWorkSpace/Profile'
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
           </Route>
           <Route path='user/:id'>
             <Route path='calendar' element={<Calendar/>}></Route>
+            <Route path='profile' element={<Profile/>}></Route>
           </Route>
           <Route path='project-invite/' element={<ProjectInvities/>}></Route>
         </Route>
