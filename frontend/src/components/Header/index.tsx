@@ -31,14 +31,29 @@ function BellIcon(props:any) {
 
 function SignInIcon(props:any) {
     return (
-        <svg {...props} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" >
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" />
         </svg>
     )
 }
 
 
+function UnreadIcon(props:any) {
+    return (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" >
+            <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+        </svg>
+    )
+}
 
+function ReadedIcon(props:any) {
+    return (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"  strokeWidth={1.5}>
+            <path d="M7 12l5 5l10 -10"></path>
+            <path d="M2 12l5 5m5 -5l5 -5"></path>
+        </svg>
+    )
+}
 
 
 const Header = () => {
@@ -60,7 +75,6 @@ const Header = () => {
                 </>
             ) : (
                 <>
-                {/* <button className="transition-all ease-linear hover:text-black"><MenuIcon className="h-5 w-5 m-1" aria-hidden="true"/></button> */}
                     <CustomDropDownMenu button={<MenuIcon className="h-5 w-5 m-1" aria-hidden="true"/>}>
                         <MenuItem>
                             <NavLink className="block transition-all ease-linear hover:data-[focus]:bg-[rgba(255,255,255,.2)] rounded-lg p-1 text-sm" to={`userworkspace/${user.user?.workspaceId}`}>
@@ -82,15 +96,40 @@ const Header = () => {
                     <div className="flex">
                         <CustomDropDownMenu button={<BellIcon className="h-5 w-5 m-1" aria-hidden="true"/>}>
                             <MenuItem>
-                                {/* <NavLink className="block transition-all ease-linear hover:data-[focus]:bg-[rgba(255,255,255,.2)] rounded-lg p-1" to={`userworkspace/${user.user?.workspaceId}`}>
-                                    Workspaces
-                                </NavLink> */}
-                                <div className="min-w-[300px] overflow-hidden flex items-center justify-center py-4">
-                                    <span className="opacity-70">No notifications</span>
+                                <div className="relative max-h-28 p-1">
+                                    <div className="max-w-[300px] flex flex-col items-center justify-center overflow-y-auto">
+                                        {/* <span className="opacity-70 py-4">No notifications</span> */}
+                                        <div className="w-full px-1 py-2 pl-2 mb-2 bg-[rgba(255,255,255,0.3)] rounded-lg shadow-md flex max-h-20">
+                                            <span className="text-xs max-w-40">Встреча "Статус-калл" перенесена на 15:00.</span>
+                                            <div className="flex flex-grow flex-col items-end justify-between">
+                                                {/* <UnreadIcon className="h-3 w-3" aria-hidden="true"/> */}
+                                                <ReadedIcon className="h-3 w-3" aria-hidden="true"/>
+                                                <span className="text-xs font-semibold text-[rgba(255,255,255,0.5)]">2:23</span>
+                                            </div>
+                                        </div>
+                                        <div className="w-full px-1 py-2 pl-2 mb-2 bg-[rgba(255,255,255,0.3)] rounded-lg shadow-md flex max-h-20">
+                                            <span className="text-xs max-w-40">Встреча "Статус-калл" перенесена на 16:00.</span>
+                                            <div className="flex flex-grow flex-col items-end justify-between">
+                                                {/* <UnreadIcon className="h-3 w-3" aria-hidden="true"/> */}
+                                                <ReadedIcon className="h-3 w-3" aria-hidden="true"/>
+                                                <span className="text-xs font-semibold text-[rgba(255,255,255,0.5)]">2:23</span>
+                                            </div>
+                                        </div>
+                                        <div className="w-full px-1 py-2 pl-2 mb-2 bg-[rgba(255,255,255,0.3)] rounded-lg shadow-md flex max-h-20">
+                                            <span className="text-xs max-w-40">
+                                                Вас приглашают присоедениться к проекту 
+                                                <button className="flex items-center justify-center mt-1 px-2 py-1 bg-[rgba(0,0,0,0.4)] rounded-lg shadow-md">Перейти</button>
+                                            </span>
+                                            <div className="flex flex-grow flex-col items-end justify-between">
+                                                {/* <UnreadIcon className="h-3 w-3" aria-hidden="true"/> */}
+                                                <ReadedIcon className="h-3 w-3" aria-hidden="true"/>
+                                                <span className="text-xs font-semibold text-[rgba(255,255,255,0.5)]">2:23</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </MenuItem>
                         </CustomDropDownMenu>
-                        {/* <button className="transition-all ease-linear hover:text-black"><BellIcon className="h-5 w-5 m-1" aria-hidden="true"/></button> */}
                         <NavLink to={`user/${user.user?.id}/profile`} className="transition-all ease-linear hover:text-black"><UserIcon className="h-5 w-5 m-1" aria-hidden="true"/></NavLink>
                     </div>
                 </>

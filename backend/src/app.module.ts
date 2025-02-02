@@ -13,6 +13,8 @@ import { CalendarModule } from './calendar/calendar.module';
 import { Calendar } from './calendar/entities/calendar.entity';
 import { ProjectInvitesModule } from './project-invites/project-invites.module';
 import { ProjectInvite } from './project-invites/entities/project-invite.entity';
+import { NotificationSystemModule } from './notification-system/notification-system.module';
+import { NotificationSystem } from './notification-system/entities/notification-system.entity';
 
 
 @Module({
@@ -28,11 +30,11 @@ import { ProjectInvite } from './project-invites/entities/project-invite.entity'
         username: configService.get("DB_USER"),
         password: configService.get("DB_PASSWORD"),
         database: configService.get("DB_NAME"),
-        entities: [User, Workspace, Project, ProjectTodo, Calendar, ProjectInvite],
+        entities: [User, Workspace, Project, ProjectTodo, Calendar, ProjectInvite, NotificationSystem],
         synchronize: true,
       })
     }), 
-    UsersModule, WorkspacesModule, ProjectsModule, ProjectsTodoModule, CalendarModule, ProjectInvitesModule
+    UsersModule, WorkspacesModule, ProjectsModule, ProjectsTodoModule, CalendarModule, ProjectInvitesModule, NotificationSystemModule
   ],
 })
 export class AppModule {}

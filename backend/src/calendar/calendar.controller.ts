@@ -1,13 +1,14 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { CalendarService } from './calendar.service';
 import { Calendar } from './entities/calendar.entity';
+import { CreateEventCalendarDto } from './dto/create-event-calendar.dto';
 
 @Controller('calendar')
 export class CalendarController {
     constructor(private readonly calendarServise: CalendarService) {}
 
     @Post()
-    createCalendar(@Body() calendar: Calendar): Promise<Calendar | null | string> {
+    createCalendar(@Body() calendar: CreateEventCalendarDto): Promise<Calendar | null | string> {
         return this.calendarServise.createCalendar(calendar);
     }
 
@@ -19,6 +20,11 @@ export class CalendarController {
     @Get(":id")
     getOneCalendar(@Param('id') id: string): Promise<Calendar | null | string> {
         return this.calendarServise.getOneCalendar(id);
+    }
+
+    @Get("user/:id")
+    getEventCalendarByUserId(@Param('id') id: string): Promise<Calendar[] | null | string> {
+        return this.calendarServise.getEventCalendarByUserId(id);
     }
 
     @Get("allbyid/:id")

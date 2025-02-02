@@ -1,7 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
-import { Project } from 'src/projects/entities/project.entity';
 import { User } from 'src/users/entities/user.entity';
-import { Workspace } from 'src/workspaces/entities/workspace.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
 
 @Entity()
@@ -11,9 +9,9 @@ export class Calendar {
     @Column()
     @IsNotEmpty()
     name: string;
-    @Column()
+    @CreateDateColumn({ type: 'timestamptz' })
     @IsNotEmpty()
-    time: string;
+    date: Date;
     @ManyToOne(() => User, (user) => user.calendar)
     @IsNotEmpty()
     user: User

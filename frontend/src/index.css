@@ -29,7 +29,8 @@
   padding: 0;
   box-sizing: border-box;
   /* user-select: none; */ 
-  font-size: clamp(0.5rem, 1.4vw, 3rem);
+  font-size: clamp(0.5rem, 1.2vw, 3rem);
+  /* font-size: clamp(0.75rem, 1vw, 1.5rem); */
 }
 
 img {
