@@ -1,5 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 import { Calendar } from 'src/calendar/entities/calendar.entity';
+import { NotificationSystem } from 'src/notification-system/entities/notification-system.entity';
 import { ProjectInvite } from 'src/project-invites/entities/project-invite.entity';
 import { ProjectTodo } from 'src/projects-todo/entities/project-todo.entity';
 import { Project } from 'src/projects/entities/project.entity';
@@ -34,4 +35,6 @@ export class User {
     calendar: Calendar[]
     @OneToMany(() => ProjectInvite, (project_invite) => project_invite.user)
     project_invite: ProjectInvite[]
+    @OneToMany(() => NotificationSystem, (notifycations) => notifycations.user)
+    notifycations: NotificationSystem[]
 }

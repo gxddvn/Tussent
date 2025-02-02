@@ -4,6 +4,7 @@ import { Calendar } from './entities/calendar.entity';
 import { Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
+import { CreateEventCalendarDto } from './dto/create-event-calendar.dto';
 
 @Injectable()
 export class CalendarService {
@@ -12,8 +13,8 @@ export class CalendarService {
         private calendarRepository: Repository<Calendar>
     ) {}
 
-    async createCalendar(calendar: Calendar): Promise<null | Calendar | string> {
-        const calendarInstance = plainToClass(Calendar, calendar);
+    async createCalendar(calendar: CreateEventCalendarDto): Promise<null | Calendar | string> {
+        const calendarInstance = plainToClass(CreateEventCalendarDto, calendar);
         const errors = await validate(calendarInstance);
         if (errors.length > 0) {
             throw new HttpException(
@@ -35,6 +36,10 @@ export class CalendarService {
 
     async getOneCalendar(id: string): Promise<Calendar | string | null> {
         return this.calendarRepository.findOneBy({id})
+    }
+    
+    async getEventCalendarByUserId(id: string): Promise<Calendar[] | string | null> {
+        return this.calendarRepository.findBy({user: {id}})
     }
 
     async getAllCalendarById(id: string): Promise<Calendar[] | null> {

@@ -10,7 +10,6 @@ const Profile = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const dispatch = useAppDispatch();
 
-
     const {
         register, 
         handleSubmit, 
@@ -25,17 +24,17 @@ const Profile = () => {
     });
 
     const notify = (mess:string) => {
-            toast.error(mess, {
-                position: "bottom-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-            });
-        }
+        toast.error(mess, {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
+    }
 
     useEffect(() => {
         if (authData.status === "loaded") {
