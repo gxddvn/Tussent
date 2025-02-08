@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import CustomModal from "../../CustomModal";
 import { useForm } from "react-hook-form";
 import { selectAuthData } from "../../../store/Slices/auth";
@@ -36,7 +36,9 @@ const Calendar = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [isDate, setIsDate] = useState<string>();
     const [calendarData, setCalendarData] = useState<CalendarProps[]>([]);
+    const [eventReload, setEventReload] = useState<boolean>(false);
     const authData = useAppSelector(selectAuthData);
+    const refOpen = useRef(false)
 
     const {
         register, 
@@ -111,7 +113,7 @@ const Calendar = () => {
         if (authData.status === "loaded") {
             fetchData()
         }
-    }, [authData.status]);
+    }, [authData.status, eventReload]);
 
     const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newDate = new Date(currentDate);
@@ -139,11 +141,7 @@ const Calendar = () => {
         }
     };
 
-    const handleClick = (day: string, hour: number, date: string) => {
-        const currentDate = getDatesOfWeek(new Date())[dayOfWeek.indexOf(day)];
-        const date1 = currentDate.getDate();
-        console.log(date1, hour);
-        // setIsHour(hour)
+    const handleClick = (date: string) => {
         setIsDate(date)
         setIsOpen(!isOpen);
     };
@@ -151,18 +149,22 @@ const Calendar = () => {
     const onSubmit = async (data: { name: string, time: string }) => {
         setIsOpen(!isOpen)
         const updatedDate = new Date(isDate as string);
+        const dateNow = new Date()
         const [hours, minutes] = data.time.split(":").map(Number);
         updatedDate.setHours(hours, minutes);
-        console.log(updatedDate)
+        if (updatedDate < dateNow) {
+            notify("Time already left")
+            return;
+        }
         try {
             await axios.post("/calendar/", {name: data.name, date: updatedDate.toISOString(), user: authData.user})
+            setEventReload(!eventReload)
         } catch (e) {
             console.error("Failed create event:", e);
             notify("Failed create event!")
         }
         reset();
     }
-
     return (
         <div className="flex flex-col h-screen px-5 pt-5 pb-3 overflow-y-auto">
             <CustomModal isOpen={isOpen} onClose={() => setIsOpen(!isOpen)} title="Create Event">
@@ -229,6 +231,9 @@ const Calendar = () => {
                         getDatesOfWeek={getDatesOfWeek} 
                         handleClick={handleClick} 
                         currentDate={currentDate}
+                        setEventReload={setEventReload}
+                        eventReload={eventReload}
+                        refOpen={refOpen}
                     />
                 </div>
             </div>
