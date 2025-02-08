@@ -39,6 +39,7 @@ export class CalendarService {
     }
     
     async getEventCalendarByUserId(id: string): Promise<Calendar[] | string | null> {
+        console.log("rend")
         return this.calendarRepository.findBy({user: {id}})
     }
 
