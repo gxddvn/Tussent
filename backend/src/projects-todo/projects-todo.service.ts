@@ -59,4 +59,8 @@ export class ProjectsTodoService {
             console.log("Project todo not found");
         }
     }
+
+    async deleteProjectTodoAllByStage(todo_stage: string, user: {id: string}, project: {id: string}): Promise<void> {
+        await this.projectTodoRepository.delete({ todo_stage, user: user, project: project });
+    }    
 }

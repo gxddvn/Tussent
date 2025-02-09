@@ -4,6 +4,7 @@ import CustomModal from '../../CustomModal'
 import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
+import { Navigate } from 'react-router-dom';
 
 const Profile = () => {
     const authData = useAppSelector(selectAuthData);
@@ -64,6 +65,10 @@ const Profile = () => {
         }
         reset();
     };
+
+    if (!authData.IsAuth && (authData.status == "loaded" || authData.status == "error")) {
+        return <Navigate to='/' />
+    }
 
     return (
         <div className='flex-grow flex flex-col items-center pt-10'>

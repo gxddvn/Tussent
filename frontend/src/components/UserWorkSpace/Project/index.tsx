@@ -213,7 +213,7 @@ const Project = () => {
         const updatedAt = new Date().toISOString();
         const updatedProject = { ...project, updatedAt };
         try {
-            await axios.post("projects-todo/", {todo_name: values.name, todo_stage: todoStage, user: String(authData.user?.id), project: String(id)})
+            await axios.post("projects-todo/", {todo_name: values.name, todo_stage: todoStage, user: authData.user?.id, project: id})
             await axios.put("projects/update", updatedProject)
             setIsOpen(false)
             setRestartEffect(!restartEffect)
@@ -278,9 +278,6 @@ const Project = () => {
 
     const DeleteProject = async () => {
         if (project) {
-            // const { favorite, ...proj } = project;
-            // const updatedProject = {...proj, favorite: !favorite}
-            // await axios.delete(`projects/delete/${project.id}`)
             await dispatch(fetchDeleteProject({...project, workspace: authData.user?.workspaceId}))
             setDeleteProject(true)
         }
@@ -301,6 +298,17 @@ const Project = () => {
             }
         }
     };
+
+    const handleOptionCol = async (column: string) => {
+        if (column) {
+            try {
+                await axios.delete(`projects-todo/deleteallbystage/`, { data: { todo_stage: column, user: { id: authData.user?.id }, project: { id: id } } })
+                setRestartEffect(!restartEffect)
+            } catch (e) {
+                console.error("Failed to clear column")
+            }
+        }
+    }
 
     if (deleteProj) {
         return <Navigate to={`/userworkspace/${authData.user?.workspaceId}`}/>
@@ -347,9 +355,6 @@ const Project = () => {
                             <div className=" w-5 h-5 flex justify-center items-center p-2 border border-[rgba(255,255,255,.5)] bg-sky-500 rounded-full mr-1 cursor-pointer"><span className="text-xs">{item.name[0]}</span></div>
                         </CustomTooltip>
                     ))}
-                    {/* <div className="p-2 border border-[rgba(255,255,255,.5)] bg-sky-500 rounded-full mr-1 cursor-pointer"></div>
-                    <div className="p-2 border border-[rgba(255,255,255,.5)] bg-yellow-500 rounded-full mr-1 cursor-pointer"></div>
-                    <div className="p-2 border border-[rgba(255,255,255,.5)] bg-lime-500 rounded-full mr-1 cursor-pointer"></div> */}
                     <CustomTooltip title={`${authData.user?.name}`} placement="bottom">
                         <div className=" w-5 h-5 flex justify-center items-center p-2 border border-[rgba(255,255,255,.5)] bg-lime-500 rounded-full mr-1 cursor-pointer"><span className="text-xs">{authData.user?.name[0]}</span></div>
                     </CustomTooltip>
@@ -385,7 +390,14 @@ const Project = () => {
                         >
                             <div className="w-full flex justify-between items-center mb-4">
                                 <h1 className="text-base font-medium">To do</h1>
-                                <button className="p-1 rounded-lg transition-all ease-linear hover:bg-[rgba(255,255,255,0.2)]"><OptionIcon/></button>
+                                <CustomDropDownMenu button={<button  className="p-1 rounded-lg transition-all ease-linear hover:bg-[rgba(255,255,255,0.2)]"><OptionIcon/></button>}>
+                                    <MenuItem>
+                                        <button onClick={() => handleOptionCol("todo")} className="flex w-full items-center transition-all ease-linear hover:data-[focus]:bg-[rgba(255,255,255,.2)] rounded-lg p-1 text-xs">
+                                            Clear All
+                                        </button>
+                                    </MenuItem>
+                                </CustomDropDownMenu>
+                                {/* <button onClick={() => handleOptionCol("todo")} className="p-1 rounded-lg transition-all ease-linear hover:bg-[rgba(255,255,255,0.2)]"><OptionIcon/></button> */}
                             </div>
                             {projectItems?.map((item: TodoInterface, index) => (
                                 item.todo_stage === "todo" && (
@@ -430,7 +442,14 @@ const Project = () => {
                         >
                             <div className="w-full flex justify-between items-center mb-4">
                                 <h1 className="text-base font-medium">Doing</h1>
-                                <button className="p-1 rounded-lg transition-all ease-linear hover:bg-[rgba(255,255,255,0.2)]"><OptionIcon/></button>
+                                <CustomDropDownMenu button={<button  className="p-1 rounded-lg transition-all ease-linear hover:bg-[rgba(255,255,255,0.2)]"><OptionIcon/></button>}>
+                                    <MenuItem>
+                                        <button onClick={() => handleOptionCol("doing")} className="flex w-full items-center transition-all ease-linear hover:data-[focus]:bg-[rgba(255,255,255,.2)] rounded-lg p-1 text-xs">
+                                            Clear All
+                                        </button>
+                                    </MenuItem>
+                                </CustomDropDownMenu>
+                                {/* <button onClick={() => handleOptionCol("doing")} className="p-1 rounded-lg transition-all ease-linear hover:bg-[rgba(255,255,255,0.2)]"><OptionIcon/></button> */}
                             </div>
                             {projectItems?.map((item: TodoInterface, index) => (
                                 item.todo_stage === "doing" && (
@@ -475,7 +494,14 @@ const Project = () => {
                         >
                             <div className="w-full flex justify-between items-center mb-4">
                                 <h1 className="text-base font-medium">Done</h1>
-                                <button className="p-1 rounded-lg transition-all ease-linear hover:bg-[rgba(255,255,255,0.2)]"><OptionIcon/></button>
+                                <CustomDropDownMenu button={<button  className="p-1 rounded-lg transition-all ease-linear hover:bg-[rgba(255,255,255,0.2)]"><OptionIcon/></button>}>
+                                    <MenuItem>
+                                        <button onClick={() => handleOptionCol("done")} className="flex w-full items-center transition-all ease-linear hover:data-[focus]:bg-[rgba(255,255,255,.2)] rounded-lg p-1 text-xs">
+                                            Clear All
+                                        </button>
+                                    </MenuItem>
+                                </CustomDropDownMenu>
+                                {/* <button onClick={() => handleOptionCol("done")} className="p-1 rounded-lg transition-all ease-linear hover:bg-[rgba(255,255,255,0.2)]"><OptionIcon/></button> */}
                             </div>
                             {projectItems?.map((item: TodoInterface, index) => (
                                 item.todo_stage === "done" && (

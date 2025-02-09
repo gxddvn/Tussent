@@ -6,6 +6,7 @@ import { useAppSelector } from "../../Hooks";
 import axios from "../../../axios";
 import { toast, ToastContainer } from "react-toastify";
 import CalendarItems from "./CalendarItems";
+import { Navigate } from "react-router-dom";
 
 interface User {
     createdAt: string
@@ -165,6 +166,11 @@ const Calendar = () => {
         }
         reset();
     }
+
+    if (!authData.IsAuth && (authData.status == "loaded" || authData.status == "error")) {
+        return <Navigate to='/' />
+    }
+    
     return (
         <div className="flex flex-col h-screen px-5 pt-5 pb-3 overflow-y-auto">
             <CustomModal isOpen={isOpen} onClose={() => setIsOpen(!isOpen)} title="Create Event">

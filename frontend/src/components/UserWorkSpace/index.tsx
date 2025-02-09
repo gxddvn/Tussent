@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom"
+import { Navigate, NavLink } from "react-router-dom"
 import { Outlet } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../Hooks"
 import { selectAuthData } from "../../store/Slices/auth"
@@ -84,6 +84,10 @@ const UserWorkSpace = () => {
             alert("Error");
         }
     };
+
+    if (!authData.IsAuth && (authData.status == "loaded" || authData.status == "error")) {
+        return <Navigate to='/' />
+    }
 
     return (
         <div className="flex flex-grow">
