@@ -35,4 +35,9 @@ export class ProjectsTodoController {
     deleteProjectTodo(@Param('id') id: string): Promise<ProjectTodo | null | void> {
         return this.projectsTodoService.deleteProjectTodo(id)
     }
+
+    @Delete(`deleteallbystage`)
+    deleteProjectTodoAllByStage(@Body() data: {todo_stage: string, user: {id: string}, project: {id: string}}): Promise<void> {
+        return this.projectsTodoService.deleteProjectTodoAllByStage(data.todo_stage, data.user, data.project)
+    }
 }

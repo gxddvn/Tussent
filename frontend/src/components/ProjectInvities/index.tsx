@@ -1,9 +1,9 @@
 import { toast, ToastContainer } from 'react-toastify';
 import axios from '../../axios';
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../Hooks';
-import { selectAuthData, selectIsAuth } from '../../store/Slices/auth';
+import { selectAuthData } from '../../store/Slices/auth';
 
 interface ProjectInterface {
     id: string;
@@ -67,6 +67,10 @@ const ProjectInvities = () => {
     }
 
     if (isDecline) return <Navigate to='/' />
+
+    if (!authData.IsAuth && (authData.status == "loaded" || authData.status == "error")) {
+        return <Navigate to='/' />
+    }
     
     return (
         <div className='flex flex-col items-center justify-center h-full'>
